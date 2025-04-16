@@ -194,10 +194,10 @@ public class Sports {
             return new ArrayList<>();
         }
         ArrayList<String> result = new ArrayList<>();
-        for (Rarting rating: products.get(productName).getRatings()){
+        for (Rating rating: products.get(productName).getRatings()){
             result.add(String.format("%d : %s", rating.getNumberOfStars(), rating.getComment()));
         }
-        Collections.sort(result, Collections.reverseOrder());
+        result.sort(Collections.reverseOrder());
         return result;
     }
 
@@ -211,7 +211,18 @@ public class Sports {
      * @return average rating
      */
     public double getStarsOfProduct (String productName) {
-        return 0;
+        ArrayList<Integer> stars = new ArrayList<>();
+        for (Rating rating : products.get(productName).getRatings()){
+            stars.add(rating.getNumberOfStars());
+        }
+        if(stars.isEmpty()){
+            return 0.0;
+        }
+        Double sum = 0.0;
+        for (Integer i: stars){
+            sum += i;
+        }
+        return  sum / stars.size();
     }
 
     /**
@@ -220,7 +231,20 @@ public class Sports {
      * @return average stars
      */
     public double averageStars() {
-        return 0;
+        ArrayList<Integer> stars = new ArrayList<>();
+        for(Product product: products.values()){
+            for (Rating rating: product.getRatings()){
+                stars.add(rating.getNumberOfStars());
+            }
+        }
+        if(stars.isEmpty()){
+            return 0.0;
+        }
+        Double sum = 0.0;
+        for (Integer i: stars){
+            sum += i;
+        }
+        return  sum / stars.size();
     }
 
     //R5 Statistiche

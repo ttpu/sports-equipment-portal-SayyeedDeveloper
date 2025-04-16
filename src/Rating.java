@@ -1,7 +1,7 @@
-public class Rarting {
+public class Rating {
     final private String productName, user, comment;
     final private int numberOfStars;
-    public Rarting(String productName, String user, int numberOfStars, String comment){
+    public Rating(String productName, String user, int numberOfStars, String comment){
         this.productName = productName;
         this.user = user;
         this.numberOfStars = numberOfStars;
