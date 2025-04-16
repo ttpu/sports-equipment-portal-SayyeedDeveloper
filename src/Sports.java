@@ -175,7 +175,12 @@ public class Sports {
      * @param comment comment for the rating
      * @throws SportsException thrown numStars is not correct
      */
-    public void addRating(String productName, String userName, int numStars, String comment) throws SportsException {}
+    public void addRating(String productName, String userName, int numStars, String comment) throws SportsException {
+        if(numStars < 0 || numStars > 5){
+            throw new SportsException();
+        }
+        products.get(productName).addRating(userName, numStars, comment);
+    }
 
     /**
      * Retrieves the ratings for the given product.
@@ -185,7 +190,15 @@ public class Sports {
      * @return list of ratings sorted by stars
      */
     public List<String> getRatingsForProduct(String productName) {
-        return null;
+        if(products.get(productName).getRatings().isEmpty()){
+            return new ArrayList<>();
+        }
+        ArrayList<String> result = new ArrayList<>();
+        for (Rarting rating: products.get(productName).getRatings()){
+            result.add(String.format("%d : %s", rating.getNumberOfStars(), rating.getComment()));
+        }
+        Collections.sort(result, Collections.reverseOrder());
+        return result;
     }
 
 
