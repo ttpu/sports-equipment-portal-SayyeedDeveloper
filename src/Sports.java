@@ -7,6 +7,7 @@ import java.util.*;
 public class Sports {
     final private List<String> listOfActivities = new ArrayList<>();
     final private HashMap<String, List<String>> categories = new HashMap<>();
+    final private HashMap<String, Product> products = new HashMap<>();
 
     //R1
     /**
@@ -91,7 +92,13 @@ public class Sports {
      * @param activityName list of disciplines
      * @throws SportsException thrown in case of duplicate name
      **/
-    public void addProduct(String name, String activityName, String categoryName) throws SportsException {}
+    public void addProduct(String name, String activityName, String categoryName) throws SportsException {
+        if (products.containsKey(name)){
+            throw new SportsException();
+        }
+        Product product = new Product(name, activityName, categoryName);
+        products.put(name, product);
+    }
 
     /**
      * Retrieves the list of products for a given category.
@@ -103,7 +110,17 @@ public class Sports {
      *     Map <String, Product> products = new TreeMap<>();
      */
     public List<String> getProductsForCategory(String categoryName){
-        return  null;
+        if(!categories.containsKey(categoryName)){
+            return new ArrayList<>();
+        }
+        ArrayList<String> result = new ArrayList<>();
+        for(Product product: products.values()){
+            if(categoryName.equals(product.getCategory())){
+                result.add(product.getName());
+            }
+        }
+        Collections.sort(result);
+        return  result;
     }
 
     /**
@@ -114,7 +131,17 @@ public class Sports {
      * @return list of products
      */
     public List<String> getProductsForActivity(String activityName){
-        return null;
+        if(!listOfActivities.contains(activityName)){
+            return new ArrayList<>();
+        }
+        ArrayList<String> result = new ArrayList<>();
+        for(Product product: products.values()){
+            if (activityName.equals(product.getActivity())) {
+                result.add(product.getName());
+            }
+        }
+        Collections.sort(result);
+        return result;
     }
     /**
      * Retrieves the list of products for a given activity and a set of categories
@@ -125,7 +152,17 @@ public class Sports {
      * @return list of products
      */
     public List<String> getProducts(String activityName, String... categoryNames){
-        return null;
+        if(!listOfActivities.contains(activityName)){
+            return new ArrayList<>();
+        }
+        ArrayList<String> result = new ArrayList<>();
+        for (Product product: products.values()){
+            if(activityName.equals(product.getActivity()) && new ArrayList<>(List.of(categoryNames)).contains(product.getCategory())){
+                result.add(product.getName());
+            }
+        }
+        Collections.sort(result);
+        return result;
     }
 
     //R3
