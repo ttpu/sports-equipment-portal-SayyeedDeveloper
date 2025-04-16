@@ -1,4 +1,5 @@
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * Facade class for the research evaluation system
@@ -256,7 +257,24 @@ public class Sports {
      * @return the map associating activity name to average stars
      */
     public SortedMap<String, Double> starsPerActivity() {
-        return null;
+        return products.values().stream()
+                .collect(Collectors.groupingBy(
+                        Product::getActivity,
+                        TreeMap::new,
+                        Collectors.averagingDouble(product -> product.getRatings().stream()
+                                .mapToInt(Rating::getNumberOfStars)
+                                .average()
+                                .orElse(0.0)
+                        )
+                ))
+                .entrySet().stream()
+                .filter(entry -> entry.getValue() > 0) // Exclude activities with no ratings
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        TreeMap::new
+                ));
     }
 
     /**
@@ -267,8 +285,20 @@ public class Sports {
      *
      * @return the map linking the average stars to the list of products
      */
-    public SortedMap<Double, List<String>> getProductsPerStars () {
-        return null;
+    public SortedMap<Double, List<String>> getProductsPerStars() {
+        SortedMap<Double, List<String>> productsByStars = new TreeMap<>(Collections.reverseOrder());
+        for (Product product : products.values()) {
+            double avgStars = product.getRatings().stream()
+                    .mapToInt(Rating::getNumberOfStars)
+                    .average()
+                    .orElse(0.0);
+            if (avgStars > 0) {
+                productsByStars.computeIfAbsent(avgStars, _ -> new ArrayList<>())
+                        .add(product.getName());
+            }
+        }
+        productsByStars.values().forEach(Collections::sort);
+        return productsByStars;
     }
 
 }
