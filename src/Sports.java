@@ -5,16 +5,28 @@ import java.util.*;
  *
  */
 public class Sports {
+    final private List<String> listOfActivities = new ArrayList<>();
+    final private HashMap<String, List<String>> categories = new HashMap<>();
 
     //R1
     /**
      * Define the activities types treated in the portal.
      * The method can be invoked multiple times to add different activities.
      *
-     * @param actvities names of the activities
+     * @param activities names of the activities
      * @throws SportsException thrown if no activity is provided
      */
-    public void defineActivities (String... activities) throws SportsException {}
+    public void defineActivities (String... activities) throws SportsException {
+        if (activities.length == 0){
+            throw new SportsException();
+        }
+        for(String activity : activities){
+            if (listOfActivities.contains(activity)){
+                throw new SportsException();
+            }
+            listOfActivities.add(activity);
+        }
+    }
 
 
     /**
@@ -23,7 +35,9 @@ public class Sports {
      * @return activities names sorted alphabetically
      */
     public List<String> getActivities() {
-        return null;
+        ArrayList<String> result = new ArrayList<>(listOfActivities);
+        Collections.sort(result);
+        return result;
     }
 
 
@@ -31,10 +45,17 @@ public class Sports {
      * Add a new category of sport products and the linked activities
      *
      * @param name name of the new category
-     * @param activities reference activities for the category
+     * @param linkedActivities reference activities for the category
      * @throws SportsException thrown if any of the specified activity does not exist
      */
-    public void addCategory(String name, String... linkedActivities) throws SportsException {}
+    public void addCategory(String name, String... linkedActivities) throws SportsException {
+        for(String activity: linkedActivities){
+            if (!listOfActivities.contains(activity)) {
+                throw new SportsException();
+            }
+        }
+        categories.put(name, List.of(linkedActivities));
+    }
 
     /**
      * Retrieves number of categories.
@@ -42,7 +63,7 @@ public class Sports {
      * @return categories count
      */
     public int countCategories() {
-        return 0;
+        return categories.size();
     }
 
     /**
@@ -52,7 +73,14 @@ public class Sports {
      * @return list of categories (sorted alphabetically)
      */
     public List<String> getCategoriesForActivity(String activity) {
-        return null;
+        ArrayList<String> result = new ArrayList<>();
+        for (Map.Entry<String, List<String>> entry : categories.entrySet()){
+            if (entry.getValue().contains(activity)) {
+                result.add(entry.getKey());
+            }
+        }
+        Collections.sort(result);
+        return result;
     }
 
     //R2
@@ -60,9 +88,9 @@ public class Sports {
      * Add a research group and the relative disciplines.
      *
      * @param name name of the research group
-     * @param disciplines list of disciplines
+     * @param activityName list of disciplines
      * @throws SportsException thrown in case of duplicate name
-     */
+     **/
     public void addProduct(String name, String activityName, String categoryName) throws SportsException {}
 
     /**
